@@ -1,0 +1,16 @@
+﻿@model WebApp.Controllers.MyModel
+
+@{
+    ViewBag.Title = "title";
+   // Layout = "_Layout";
+}
+
+@*Normal Output: <span>@Model.MyData</span>*@
+
+<br />
+HtmlRaw Output: <span>@Html.Raw(@Model.MyData)</span>
+
+
+<br />
+<hr />
+

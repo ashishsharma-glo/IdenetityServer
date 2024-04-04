@@ -1,0 +1,42 @@
+﻿@model WebApp.Controllers.TokenController.ModelData
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>title</title>
+</head>
+<body>
+<div>
+      
+    <span id="tokenvalue">@Model.TokenValue</span><hr/>
+    <span>@Model.PlainToken</span><hr/>
+    
+    
+    
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.js"
+        integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+        crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            debugger;
+            var value = $('#tokenvalue')[0].innerHTML;
+            localStorage.setItem("mytoken", value);
+        });
+    </script>
+    
+    
+    
+    
+    
+
+
+
+</div>
+</body>
+</html>

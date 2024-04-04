@@ -1,0 +1,131 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+    var loginData = {
+        Email: 'joe22@smith.com',
+        Password: 'Abc123!',
+        ConfirmPassword: 'Abc123!'
+    };
+
+
+    function register() {
+
+
+        $.ajax({
+                type: 'POST',
+                url: '/api/AccountWebApiToken/Register',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(loginData)
+            })
+            .done(function(data) {
+                alert('registration success');
+            })
+            .fail(function() {
+                alert('registration failed');
+            });
+    };
+
+    var tokenLoginData = {
+        grant_type: 'password',
+        username: 'joe22@smith.com',
+        password: 'Abc123!'
+    };
+
+
+
+    function getToken() {
+        $.ajax({
+            type: 'POST',
+            url: '/Token',
+            data: tokenLoginData
+        }).done(function (data) {
+            console.log('Token: ' + data.access_token);
+            localStorage.setItem('theToken', data.access_token);
+            alert('token: ' + data.access_token);
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR.responseText);
+        });
+
+    }
+
+    function getAuthData() {
+        var token = localStorage.getItem('theToken');
+        var headers = {};
+        if (token) {
+            headers.Authorization = 'Bearer ' + token;
+        }
+        $.ajax({
+            type: 'GET',
+            url: 'api/SpeakerWebApi',
+            headers: headers
+        }).done(function (data) {
+            alert(JSON.stringify(data));
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            alert(jqXHR.responseText);
+        });
+
+    }
+
+
+
+
+    //$(document)
+    //    .ready(function() {
+    //        $.ajax({
+    //            url: '/api/SpeakerWebApi',
+    //            type: 'GET',
+    //            dataType: 'json',
+    //            data: {
+    //                firstName: 'Peter',
+    //                lastName: 'Kellner'
+    //            },
+    //            error: function(jqXhr, textStatus, errorThrown) {
+    //                alert('An error occurred');
+
+    //            },
+    //            success: function(data, textStatus, jqXhr) {
+    //                alert('success');
+    //            }
+    //        });
+    //    });
+</script>
+
+<br />
+<button type="button" onclick="register()">Register joe22</button>
+&nbsp;
+<button type="button" onclick="getToken()">Get Token For joe22</button>
+&nbsp;
+<button type="button" onclick="getAuthData()">Get Speaker Data For joe22</button>
+<br /><br />
+
+
+<div class="jumbotron">
+    <h1>ASP.NET</h1>
+    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Getting started</h2>
+        <p>
+            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
+            enables a clean separation of concerns and gives you full control over markup
+            for enjoyable, agile development.
+        </p>
+        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Get more libraries</h2>
+        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
+        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Web Hosting</h2>
+        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
+        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+    </div>
+</div>

@@ -1,0 +1,63 @@
+﻿@model System.Collections.Generic.List<WebApp.Models.Speaker>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Speakers</title>
+    <script type="text/javascript">
+
+
+        $(document)
+            .ready(function() {
+                $.ajax({
+                    url: '/api/SpeakerWebApi',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        firstName: 'Peter',
+                        lastName: 'Kellner'
+                    },
+                    error: function(jqXhr, textStatus, errorThrown) {
+                        alert('An error occurred');
+
+                    },
+                    success: function(data, textStatus, jqXhr) {
+                        alert('success');
+                    }
+                });
+            });
+    </script>
+
+
+
+</head>
+<body>
+<div>
+    <table>
+        <thead>
+            <tr>
+                <td>First</td>
+                <td>Last</td>
+                <td>TenantId</td>
+            </tr>
+        </thead>
+        @foreach (var speaker in @Model)
+        {
+            <tr>
+                <td>@speaker.First</td>
+                <td>@speaker.Last</td>
+                <td>@speaker.TenantId</td>
+            </tr>
+        }
+
+    </table>
+
+
+</div>
+</body>
+</html>

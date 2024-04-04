@@ -1,0 +1,123 @@
+install-package authy.net
+
+add to identitymodel.cs (below tenantId)
+  public string AuthyId { get; set; }
+
+  public string AuthyStatus { get; set; }
+
+bring in files:
+
+  C:\temp\authy2fa-csharp-master\Authy2FA\Domain\Authy (all 3 files)
+  C:\...\Providers\authyOne.. and .....\authytokenpro..
+  
+  
+to IdentityConfig.cs (IN app_start) add
+		public ApplicationUser FindByAuthyId(string authyId)
+        {
+            return Users.FirstOrDefault(x => x.AuthyId == authyId);
+        }
+
+        public Task<ApplicationUser> FindByAuthyIdAsync(string authyId)
+        {
+            return Users.FirstOrDefaultAsync(x => x.AuthyId == authyId);
+        }
+
+
+
+---ADD THIS TO ApplicationUserManager : ApplicationUserManager Create
+
+// Register Authy as 2FA provider 
+manager.RegisterTwoFactorProvider("Authy One Touch", new AuthyOneTouchProvider<ApplicationUser>("AuthyId"));
+manager.RegisterTwoFactorProvider("Authy Token", new AuthyTokenProvider<ApplicationUser>("AuthyId"));
+
+
+ManagerController.cs update
+
+Add private _auth... at top properties
+  fix addphonenumber method with new stuff
+  
+Add AuthyController to project
+
+
+
+To AccountViewModel.cs
+  add after VerifyCodeViewModel the VerifyOneTouchViewModel class:
+  
+    public class VerifyOneTouchViewModel
+    {
+        public string Provider { get; set; }
+        public string ReturnUrl { get; set; }
+        public bool RememberBrowser { get; set; }
+        public bool RememberMe { get; set; }
+    }
+
+	
+	
+TO AddPhoneNumberViewModel
+  Add country code to phone:
+  [Required]
+        [Display(Name = "Country Code")]
+        public string CountryCode { get; set; }
+		
+  change to just number
+	
+
+
+in AccountController.cs
+  after verifycode, add VerifyOneTouch GET and POST
+  ADD resetAuthyStatus at very bottom of this
+  
+  
+put scripts file onetouch.js script itno scripts dir
+  
+
+    
+config:
+
+to web.config add 
+   <add key="AuthyKey" value="diXRQqK5mIQhlJrTQrCKrPp3ENQogn1c" />
+   
+   
+view/manage/index.cshtml    - unpaste two factor auth section
+add phone numbers below "manage ext logins"
+ <dt>Phone Number:</dt>
+        <dd>
+            @(Model.PhoneNumber ?? "None") [
+            @if (Model.PhoneNumber != null)
+            {
+                @Html.ActionLink("Change", "AddPhoneNumber")
+                @: &nbsp;|&nbsp;
+                @Html.ActionLink("Remove", "RemovePhoneNumber")
+            }
+            else
+            {
+                @Html.ActionLink("Add", "AddPhoneNumber")
+            }
+            ]
+        </dd>
+		
+in AddPhoneNumber.cshtml  
+  put in country code above normal phone
+   <div class='form-group'>
+        @Html.LabelFor(m => m.CountryCode, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.CountryCode, new { @class = "form-control", @id = "authy-countries", @placeholder = "Country", data_show_as = "number", @size = 5 })
+        </div>
+    </div>
+
+	
+On AddPhoneNumber in ManagerController POST
+  replace with twilio code
+  
+  
+AddPhoneNumberViewModel.cs
+  make sure just countrycode and number (double check this from original)
+  
+  
+copy in to views directory account/VerifyOneTouch.cshtml
+
+
+UPDATE account sendcode post, put in twilio code
+  
+
+
